@@ -1,0 +1,164 @@
+---
+import BlogPage from "../../layouts/BlogPage.astro";
+import Friend from "../../components/friend/Friend.astro";
+import FriendList from "../../components/friend/FriendList.astro";
+import FriendCategoryTitle from "../../components/friend/FriendCategoryTitle.astro";
+import MarkdownBody from "../../components/MarkdownBody.astro";
+import { SITE_TITLE, SITE_DESCRIPTION } from "../../consts";
+import headPicture from "../../assets/headpicture.jpg";
+import { Image } from "astro:assets";
+
+// 友链数据
+const links = [
+    {
+        name: "Ryanjxy's Blog",
+        url: "https://ryanjxy456.github.io",
+        avatarUrl: "https://raw.githubusercontent.com/Ryanjxy123/picbed/main/data20260218001557991.png",
+        description: "Do not go gentle into that good night."
+    },
+];
+    
+// 本站信息
+const siteInfo = {
+    name: SITE_TITLE,
+    url: "https://ryanjxy.cn",
+    description: SITE_DESCRIPTION,
+    avatarUrl: "https://raw.githubusercontent.com/Ryanjxy123/picbed/main/data20260218001557991.png"
+};
+---
+
+<BlogPage title="友链" description="来看看我的小伙伴们吧！">
+    <!-- 友链展示区 -->
+    <section class="mb-12">
+        <h2 class="text-3xl font-bold mb-8 text-left dark:text-white">友链</h2>
+        <FriendList>
+            {links.map((link) => (
+                <div class="bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/20 hover:bg-white/20 transition-all duration-300 hover:shadow-xl hover:scale-105">
+                    <Friend
+                        key={link.name}
+                        url={link.url}
+                        name={link.name}
+                        description={link.description}
+                        avatarUrl={link.avatarUrl}
+                    />
+                </div>
+            ))}
+        </FriendList>
+    </section>
+
+    <!-- 本站信息区 -->
+    <section class="mb-12">
+        <h2 class="text-3xl font-bold mb-8 text-left dark:text-white">本站信息</h2>
+        <div class="p-8 -ml-8">
+            <!-- 表单式布局 -->
+            <div class="space-y-4 pl-6 border-l-4 border-blue-500 pt-2 pb-2">
+                <!-- Name 字段 -->
+                <div class="flex items-center justify-between">
+                    <label class="text-gray-400 dark:text-gray-500 text-sm font-medium w-20">Name</label>
+                    <div
+                        class="flex-1 ml-4 cursor-pointer select-none"
+                        data-value={siteInfo.name}
+                    >
+                        <div class="bg-gray-100 dark:bg-gray-800 rounded-md p-3 font-mono text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors duration-200">
+                            {siteInfo.name}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Link 字段 -->
+                <div class="flex items-center justify-between">
+                    <label class="text-gray-400 dark:text-gray-500 text-sm font-medium w-20">Link</label>
+                    <div
+                        class="flex-1 ml-4 cursor-pointer select-none"
+                        data-value={siteInfo.url}
+                    >
+                        <div class="bg-gray-100 dark:bg-gray-800 rounded-md p-3 font-mono text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors duration-200 break-all">
+                            {siteInfo.url}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Avatar 字段 -->
+                <div class="flex items-center justify-between">
+                    <label class="text-gray-400 dark:text-gray-500 text-sm font-medium w-20">Avatar</label>
+                    <div
+                        class="flex-1 ml-4 cursor-pointer select-none"
+                        data-value={siteInfo.avatarUrl}
+                    >
+                        <div class="bg-gray-100 dark:bg-gray-800 rounded-md p-3 font-mono text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors duration-200 break-all">
+                            {siteInfo.avatarUrl}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Desc 字段 -->
+                <div class="flex items-center justify-between">
+                    <label class="text-gray-400 dark:text-gray-500 text-sm font-medium w-20">Desc</label>
+                    <div
+                        class="flex-1 ml-4 cursor-pointer select-none"
+                        data-value={siteInfo.description}
+                    >
+                        <div class="bg-gray-100 dark:bg-gray-800 rounded-md p-3 font-mono text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors duration-200">
+                            {siteInfo.description}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</BlogPage>
+
+<script>
+    // 复制功能
+    document.addEventListener('DOMContentLoaded', () => {
+        // 为所有带有 data-value 的可复制区域添加点击监听
+        document.querySelectorAll('[data-value]').forEach(element => {
+            element.addEventListener('click', async (e) => {
+                const parent = e.currentTarget;
+                const value = parent.dataset.value;
+                if (!value) return;
+
+                // 执行复制
+                try {
+                    await navigator.clipboard.writeText(value);
+                } catch (err) {
+                    const textArea = document.createElement('textarea');
+                    textArea.value = value;
+                    document.body.appendChild(textArea);
+                    textArea.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(textArea);
+                }
+
+                // 视觉反馈逻辑 (方案 A)
+                const targetDiv = parent.querySelector('div');
+                if (targetDiv) {
+                    // 1. 如果尚未保存原始状态，则保存文本并锁定高度以防布局抖动
+                    if (!targetDiv.dataset.originalText) {
+                        targetDiv.dataset.originalText = targetDiv.textContent;
+                        targetDiv.style.minHeight = `${targetDiv.offsetHeight}px`;
+                    }
+
+                    // 2. 清除可能存在的旧定时器，处理连续点击
+                    if (targetDiv.dataset.timerId) {
+                        clearTimeout(parseInt(targetDiv.dataset.timerId));
+                    }
+
+                    // 3. 临时替换文本
+                    targetDiv.textContent = '✅ 已复制！';
+
+                    // 4. 设置恢复定时器
+                    const timerId = setTimeout(() => {
+                        targetDiv.textContent = targetDiv.dataset.originalText;
+                        targetDiv.style.minHeight = '';
+                        delete targetDiv.dataset.originalText;
+                        delete targetDiv.dataset.timerId;
+                    }, 1500);
+
+                    // 5. 记录定时器 ID
+                    targetDiv.dataset.timerId = timerId.toString();
+                }
+            });
+        });
+    });
+</script>

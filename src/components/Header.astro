@@ -1,0 +1,68 @@
+---
+import {
+	SITE_AUTHOR_AVATAR,
+	SITE_DESCRIPTION,
+	SITE_HEAD_IMAGE_DAY,
+	SITE_HEAD_IMAGE_NIGHT,
+	SITE_TITLE,
+} from "../consts";
+import HeaderNav from "./HeaderNav.svelte";
+import { Image } from "astro:assets";
+
+interface Props {
+	largeBanner?: boolean;
+	currentPageTitle?: string;
+}
+
+const { largeBanner, currentPageTitle } = Astro.props;
+
+const presetSizes = [320, 640, 768, 1024, 1280, 1536, 1920, 2560];
+const imageSizes = presetSizes.map(e => `(max-width: ${Math.floor(e / 2)}px) ${e}px, `).join("");
+
+const heightClassName = largeBanner ? "h-[calc(100svh+8rem)]" : "h-[calc(65lvh+8rem)]";
+---
+
+<HeaderNav client:load>
+	<Image
+		slot="avatar"
+		class="block w-12 h-12 rounded-full"
+		alt="头像"
+		src={SITE_AUTHOR_AVATAR}
+		width={48}
+		densities={[1, 2, 3]}
+	/>
+</HeaderNav>
+
+<header id="navBackground" class={`${heightClassName} min-h-[30rem] flex flex-col z-0`}>
+	<div class="flex-auto relative">
+		{
+			largeBanner ? (
+				<div
+					id="navScrollNotice"
+					aria-hidden="true"
+					class="absolute h-2 w-16 -translate-x-2/4 left-2/4 bottom-4 bg-white/60 dark:bg-zinc-700/60 rounded-full transition-all"
+				/>
+			) : null
+		}
+	</div>
+	<!-- 底部渐变过渡（已移至背景图容器内，此处保留空间占位） -->
+	<div aria-hidden="true" class="flex-none h-32 w-full"></div>
+</header>
+
+<!-- 背景图层：使用物理堆叠 + CSS 透明度切换 -->
+<div class="absolute top-0 left-0 w-full h-full overflow-hidden -z-50 pointer-events-none">
+	<!-- 白天背景图：亮色模式可见，暗色模式透明 -->
+	<img
+		src="/header_day.webp"
+		alt="Day Background"
+		class="absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ease-in-out opacity-100 dark:opacity-0"
+	/>
+	<!-- 夜间背景图：亮色模式透明，暗色模式可见 -->
+	<img
+		src="/header_night.webp"
+		alt="Night Background"
+		class="absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ease-in-out opacity-0 dark:opacity-100"
+	/>
+	<!-- 底部渐变遮罩 -->
+	<div class="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-white dark:to-[#050505]"></div>
+</div>

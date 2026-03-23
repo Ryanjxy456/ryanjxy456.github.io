@@ -1,0 +1,18 @@
+---
+interface Props {
+    defaultPadding: boolean;
+}
+
+const { defaultPadding } = Astro.props;
+---
+
+<div class="flex justify-center -mt-32 relative md:px-4 xl:px-0">
+    <!-- bg-white/70 dark:bg-gray-950/70 md:rounded-3xl backdrop-blur-xl -->
+    <main class={`w-full max-w-6xl relative z-10 mx-auto ${defaultPadding ? "p-5 md:p-8" : ""}`}>
+        <slot />
+    </main>
+    <!-- <div
+        class="w-full max-w-6xl h-64 absolute bg-white/70 dark:bg-[#18181b]/90 md:rounded-3xl backdrop-blur-xl top-0 left-1/2 -translate-x-1/2"
+        aria-hidden="true"
+    > -->
+</div>

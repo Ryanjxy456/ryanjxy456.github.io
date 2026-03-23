@@ -1,0 +1,53 @@
+---
+import { SITE_LANGUAGE } from "../consts";
+import "@/assets/fonts/ChillRoundF/ChillRoundF.css";
+import ClickEffect from "../components/ClickEffect.tsx";
+import { ViewTransitions } from 'astro:transitions';
+import MusicPlayer from '../components/MusicPlayer.astro';
+---
+
+<!doctype html>
+<html lang={SITE_LANGUAGE}>
+    <head>
+        <slot name="head" />
+        <ViewTransitions />
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" />
+        <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+        <script
+            defer
+            src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+            onload="renderMathInElement(document.body, {delimiters: [
+      {left: '$$', right: '$$', display: true},
+      {left: '$', right: '$', display: false}
+    ]});"
+        ></script>
+
+        <!-- 主题初始化脚本：防止页面闪烁 (FOUC) -->
+        <script is:inline>
+            const setTheme = () => {
+                const theme =
+                    localStorage.getItem("theme") ||
+                    (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+                if (theme === "dark") {
+                    document.documentElement.classList.add("dark");
+                } else {
+                    document.documentElement.classList.remove("dark");
+                }
+            };
+            // 1. 页面首次硬加载时立即执行
+            setTheme();
+            // 2. Astro 视图过渡：在新旧 DOM 交换后立即恢复主题
+            document.addEventListener("astro:after-swap", setTheme);
+        </script>
+
+        <!-- APlayer and MetingJS Dependencies -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css" />
+        <script is:inline src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script>
+        <script is:inline src="https://cdn.jsdelivr.net/npm/meting@2/dist/Meting.min.js"></script>
+    </head>
+    <body class="dark:bg-transparent">
+        <ClickEffect client:load />
+        <slot />
+        <MusicPlayer />
+    </body>
+</html>

@@ -1,0 +1,142 @@
+---
+import BaseHead from "../components/BaseHead.astro";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+import { SITE_TITLE, SITE_DESCRIPTION } from "../consts";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Container from "../components/Container.astro";
+
+const pageTitle = `关于 - ${SITE_TITLE}`;
+const pageDescription = "关于我以及这个博客的介绍";
+
+// 网页分发平台数据
+const platforms = [
+    {
+        name: "个人域名",
+        domain: "beautifulcloud.top",
+        url: "https://beautifulcloud.top",
+        icon: `<svg width="24px" height="24px" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" fill="#000000"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <title>domain</title> <g id="Layer_2" data-name="Layer 2"> <g id="invisible_box" data-name="invisible box"> <rect width="48" height="48" fill="none"></rect> </g> <g id="icons_Q2" data-name="icons Q2"> <path d="M24,2A22,22,0,1,0,46,24,21.9,21.9,0,0,0,24,2ZM40.1,16H35.2a27.8,27.8,0,0,0-3-8A18.5,18.5,0,0,1,40.1,16ZM42,24a17.5,17.5,0,0,1-.5,4H35.8c.1-1.3.2-2.6.2-4s-.1-2.7-.2-4h5.7A17.5,17.5,0,0,1,42,24ZM6,24a17.5,17.5,0,0,1,.5-4h5.7c-.1,1.3-.2,2.6-.2,4s.1,2.7.2,4H6.5A17.5,17.5,0,0,1,6,24Zm10,0c0-1.4.1-2.7.2-4H22v8H16.2C16.1,26.7,16,25.4,16,24ZM26,6.7a11.7,11.7,0,0,1,3,3.7A21.7,21.7,0,0,1,31.1,16H26Zm-4,0V16H16.9A21.7,21.7,0,0,1,19,10.4,11.7,11.7,0,0,1,22,6.7ZM22,32v9.3a11.7,11.7,0,0,1-3-3.7A21.7,21.7,0,0,1,16.9,32Zm4,9.3V32h5.1A21.7,21.7,0,0,1,29,37.6,11.7,11.7,0,0,1,26,41.3ZM26,28V20h5.8c.1,1.3.2,2.6.2,4s-.1,2.7-.2,4ZM15.8,8a27.8,27.8,0,0,0-3,8H7.9A18.5,18.5,0,0,1,15.8,8ZM7.9,32h4.9a27.8,27.8,0,0,0,3,8A18.5,18.5,0,0,1,7.9,32Zm24.3,8a27.8,27.8,0,0,0,3-8h4.9A18.5,18.5,0,0,1,32.2,40Z"></path> </g> </g> </g></svg>`
+    },
+    {
+        name: "Vercel",
+        domain: "ryanjxy456-blog.vercel.app",
+        url: "https://ryanjxy456-blog.vercel.app/",
+        icon: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6"><path d="M24 22.525H0l12-21.05 12 21.05z"/></svg>`
+    },
+    {
+        name: "GitHub Pages",
+        domain: "ryanjxy456.github.io",
+        url: "https://ryanjxy456.github.io",
+        icon: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>`
+    }
+];
+---
+
+<BaseLayout>
+    <BaseHead slot="head" title={pageTitle} description={pageDescription} />
+    <Header />
+    <Container defaultPadding={true}>
+        <main class="py-16 sm:py-24">
+            <div class="max-w-3xl mx-auto space-y-20">
+                <!-- 关于标题区块 -->
+                <section class="animate-fade-in">
+                    <div class="mb-8">
+                        <h2 class="text-3xl font-bold text-zinc-900 dark:text-zinc-100 tracking-tight" style="font-size: 1.5rem !important; line-height: 2rem !important;">
+                            关于
+                        </h2>
+                    </div>
+
+                    <div class="prose prose-zinc dark:prose-invert max-w-none">
+                        <p class="text-lg leading-relaxed text-zinc-600 dark:text-zinc-400 font-sans">
+                            欢迎来到我的博客！这里是我记录学习笔记、技术实践和个人思考的角落。本博客基于 Astro 构建，旨在提供一个纯粹、高效的写作环境。
+                    </div>
+                </section>
+
+                <!-- 网页分发区块 -->
+                <section class="animate-fade-in" style="animation-delay: 0.2s;">
+                    <div class="mb-6">
+                        <h2 class="text-3xl font-bold text-zinc-900 dark:text-zinc-100 tracking-tight" style="font-size: 1.5rem !important; line-height: 2rem !important;">
+                            网页分发
+                        </h2>
+                    </div>
+
+                    <p class="text-gray-700 dark:text-gray-300 leading-relaxed mb-8">
+                        考虑到不同网络环境的差异，本博客在多个云平台均有部署。您可以根据当前的访问速度，自由切换以下镜像源：
+                    </p>
+
+                    <!-- 分发卡片网格 -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        {platforms.map((platform) => (
+                            <a
+                                href={platform.url}
+                                target="_blank"
+                                class="flex items-center justify-between p-5 bg-white dark:bg-[#18181b] border border-zinc-200 dark:border-zinc-800 rounded-2xl hover:shadow-lg dark:hover:border-zinc-700 transition-all duration-300 group"
+                            >
+                                <div class="flex items-center gap-4">
+                                    <!-- 平台图标 -->
+                                    <div class="text-zinc-700 dark:text-zinc-300 group-hover:text-blue-500 transition-colors" set:html={platform.icon} />
+                                    <!-- 平台信息 -->
+                                    <div>
+                                        <div class="text-base font-bold text-zinc-900 dark:text-zinc-100 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+                                            {platform.name}
+                                        </div>
+                                        <div class="text-xs text-zinc-500 dark:text-zinc-500 font-mono mt-0.5">
+                                            {platform.domain}
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- 右侧箭头 -->
+                                <div class="text-zinc-400 group-hover:translate-x-1 transition-transform">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+                                </div>
+                            </a>
+                        ))}
+                    </div>
+
+                    <p class="mt-8 text-gray-700 dark:text-gray-300 leading-relaxed text-center md:text-left">
+                        如果您遇到访问问题，建议尝试其他镜像站点。所有站点内容保持同步更新。
+                    </p>
+                </section>
+
+<div>
+  <h2 class="text-2xl font-bold mb-4" style="font-size: 1.5rem !important; line-height: 2rem !important;">版权</h2>
+  <p class="text-gray-700 dark:text-gray-300 mb-4 leading-relaxed">
+    如你所见，本站中的所有原创内容及设计整体，除非特别说明，均使用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" rel="noopener noreferrer" class="text-blue-500 hover:text-blue-600 hover:underline transition-colors">CC BY-NC-SA 4.0</a> 协议进行授权。这意味着您可以在协议允许的范围内自由地分享、复制本作品的内容及基于本作品内容进行创作，但必须注明原作者和链接，并且不得用于任何商业目的。
+  </p>
+  <p class="text-gray-700 dark:text-gray-300 mb-6 leading-relaxed">
+    本站中的绝大多数博客封面均选自公开作品，并已注明原作链接。包括封面在内，本站中使用了一些来自互联网的图片等素材或商标、标志及相关知识产权，无论是否标注有 © 或 ™ 及其他标识，均归属它们各自的权利持有人所有，并无意侵犯其作品、商标或版权。如果本站中存在侵犯您权益的内容，请您联系我，我将尽快予以删除。
+  </p>
+  <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" rel="noopener noreferrer" class="inline-block">
+    <img src="https://mirrors.creativecommons.org/presskit/buttons/88x31/svg/by-nc-sa.svg" alt="CC BY-NC-SA 4.0 License" class="h-8" />
+  </a>
+</div>
+
+<div class="mb-16">
+  <h2 class="text-2xl font-bold mb-4" style="font-size: 1.5rem !important; line-height: 2rem !important;">主题</h2>
+  <p class="text-gray-700 dark:text-gray-300 leading-relaxed">
+    本主题基于 <a href="https://github.com/tcdw/koi" target="_blank" rel="noopener noreferrer" class="text-blue-500 hover:text-blue-600 hover:underline transition-colors">Koi</a> 并在其之上参考了 <a href="https://github.com/Axi404/axi404.github.io" target="_blank" rel="noopener noreferrer" class="text-blue-500 hover:text-blue-600 hover:underline transition-colors">Astro-Axi</a> 中的组件内容进行增添功能，在此对原作者表示诚挚的感谢。同时，进行了大量的修改和定制，包括添加了实用的“工具”栏目功能，重构了部分组件样式以提升响应式阅读体验，并优化了深浅色模式的切换逻辑等。
+  </p>
+</div>
+            </div>
+        </main>
+    </Container>
+    <Footer />
+</BaseLayout>
+
+<style>
+    .animate-fade-in {
+        opacity: 0;
+        animation: fadeIn 0.8s ease-out forwards;
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+</style>

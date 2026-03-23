@@ -1,0 +1,590 @@
+---
+import type { CollectionEntry } from "astro:content";
+import BaseHead from "../components/BaseHead.astro";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+import FormattedDate from "../components/FormattedDate.astro";
+import BaseLayout from "./BaseLayout.astro";
+import Container from "../components/Container.astro";
+import MarkdownBody from "../components/MarkdownBody.astro";
+import TagBadge from "../components/TagBadge.astro";
+import TableOfContents from "../components/TableOfContents.astro";
+import Waline from "../components/Waline.astro";
+
+import { getReadingTime } from "../utils/readingTime";
+
+type Props = CollectionEntry<"blog">["data"] & {
+	body?: string;
+	headings?: { depth: number; slug: string; text: string }[];
+};
+
+const { title, description, pubDate, updatedDate, heroImage, heroImageSource, body, headings } = Astro.props;
+const readingTime = getReadingTime(body);
+const formattedDate = pubDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+---
+
+<BaseLayout>
+	<BaseHead slot="head" title={title} description={description ?? ""} image={heroImage} />
+	<Header />
+	<Container defaultPadding={true}>
+		<div class="mb-8">
+			<article class="text-black dark:text-white">
+				<!-- 双栏容器：左侧主内容 + 右侧固定目录 -->
+				<div class="grid grid-cols-1 lg:grid-cols-[1fr_300px] gap-8 items-start">
+					<!-- 左侧主内容栏（可滚动） -->
+					<div class="min-w-0">
+						{
+							heroImage && (
+								<div class="mt-3 mb-8">
+									<img
+										src={heroImage}
+										alt={title}
+										class="w-full rounded-2xl object-cover max-h-96"
+										loading="lazy"
+									/>
+								</div>
+							)
+						}
+
+						<!-- 元数据行 -->
+						<div class="article-meta-row flex flex-wrap items-center gap-3 mt-3 mb-6 text-gray-500 text-base md:text-base leading-tight">
+							<!-- 日期 -->
+							<div class="flex items-center gap-1">
+								<svg
+									xmlns="http://www.w3.org/2000/svg"
+									class="w-6 h-6"
+									viewBox="0 0 24 24"
+									fill="none"
+									stroke="currentColor"
+									stroke-width="2"
+									stroke-linecap="round"
+									stroke-linejoin="round"
+								>
+									<rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+									<line x1="16" y1="2" x2="16" y2="6"></line>
+									<line x1="8" y1="2" x2="8" y2="6"></line>
+									<line x1="3" y1="10" x2="21" y2="10"></line>
+								</svg>
+								<FormattedDate date={pubDate} />
+							</div>
+
+							<!-- 阅读时间 -->
+							<div class="flex items-center gap-1">
+								<svg
+									xmlns="http://www.w3.org/2000/svg"
+									class="w-6 h-6"
+									viewBox="0 0 24 24"
+									fill="none"
+									stroke="currentColor"
+									stroke-width="2"
+									stroke-linecap="round"
+									stroke-linejoin="round"
+								>
+									<circle cx="12" cy="12" r="10"></circle>
+									<polyline points="12 6 12 12 16 14"></polyline>
+								</svg>
+								<span>{readingTime}</span>
+							</div>
+
+							<!-- 图片来源 -->
+							{
+								heroImage && (
+									<div class="flex items-center gap-1">
+										<svg
+											xmlns="http://www.w3.org/2000/svg"
+											class="w-6 h-6"
+											viewBox="0 0 24 24"
+											fill="none"
+											stroke="currentColor"
+											stroke-width="2"
+											stroke-linecap="round"
+											stroke-linejoin="round"
+										>
+											<rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+											<circle cx="8.5" cy="8.5" r="1.5"></circle>
+											<polyline points="21 15 16 10 5 21"></polyline>
+										</svg>
+										<a href={heroImageSource || heroImage} target="_blank" rel="noopener noreferrer" class="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:underline">
+											image
+										</a>
+									</div>
+								)
+							}
+
+							<!-- 标签 -->
+							{
+								Astro.props.tags && Astro.props.tags.length > 0 && (
+									<div class="flex items-center gap-1 flex-wrap">
+										<svg
+											xmlns="http://www.w3.org/2000/svg"
+											class="w-6 h-6 flex-shrink-0"
+											viewBox="0 0 24 24"
+											fill="none"
+											stroke="currentColor"
+											stroke-width="2"
+											stroke-linecap="round"
+											stroke-linejoin="round"
+										>
+											<path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
+											<line x1="7" y1="7" x2="7.01" y2="7"></line>
+										</svg>
+										<div class="flex flex-wrap items-center gap-x-1 gap-y-1">
+											{
+												Astro.props.tags.map((tag, index) => (
+													<>
+														<a
+															href={`/tags/${tag}/`}
+															class="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:underline align-middle"
+														>
+															{tag}
+														</a>
+														{index < Astro.props.tags.length - 1 && <span class="text-gray-500"> / </span>}
+													</>
+												))
+											}
+										</div>
+									</div>
+								)
+							}
+						</div>
+
+
+						<!-- 更新日期 -->
+						{
+							updatedDate && (
+								<div class="mt-2 mb-6 opacity-60 text-sm">
+									(Last updated on <FormattedDate date={updatedDate} />)
+								</div>
+							)
+						}
+
+						<!-- 分割线 -->
+						<hr class="meta-divider my-8 border-gray-300 dark:border-gray-700" />
+
+						<h1 class="text-4xl font-bold leading-normal">{title}</h1>
+
+						<!-- 正文内容 -->
+						<MarkdownBody class="mt-6">
+							<slot />
+						</MarkdownBody>
+
+
+					</div>
+
+					<!-- 右侧目录栏（固定悬浮） -->
+					{
+						headings && headings.length > 0 && (
+							<div class="hidden lg:block sticky top-24 self-start h-max overflow-y-auto mt-3">
+								<TableOfContents headings={headings} />
+							</div>
+						)
+					}
+				</div>
+
+			<div class="min-w-0 lg:mr-[300px]">
+				<!-- 版权协议卡片 -->
+				<div class="relative border border-gray-200 dark:border-zinc-800 rounded-xl p-6 bg-gray-50 dark:bg-zinc-900 mt-8 mb-8">
+					<!-- 标题和链接 -->
+					<div class="mb-6">
+						<h3 class="text-lg font-bold text-gray-900 dark:text-white mb-2">{title}</h3>
+						<p class="text-sm text-gray-500 dark:text-gray-400 break-all">{Astro.url.href}</p>
+					</div>
+					<!-- 三列信息 -->
+					<div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+						<div>
+							<div class="font-medium text-gray-700 dark:text-gray-300">Author</div>
+							<div class="text-gray-600 dark:text-gray-400">Ryanjxy</div>
+						</div>
+						<div>
+							<div class="font-medium text-gray-700 dark:text-gray-300">Published at</div>
+							<div class="text-gray-600 dark:text-gray-400">{formattedDate}</div>
+						</div>
+						<div>
+							<div class="font-medium text-gray-700 dark:text-gray-300">Copyright</div>
+							<div class="text-gray-600 dark:text-gray-400">
+								<a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" rel="noopener noreferrer" class="hover:underline">CC BY-NC-SA 4.0</a>
+							</div>
+						</div>
+					</div>
+					<!-- 大型半透明版权水印 -->
+					<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="absolute top-[35%] -translate-y-1/2 right-1 w-28 h-28 opacity-[0.03] text-gray-900 dark:text-white pointer-events-none">
+						<circle cx="12" cy="12" r="10"></circle>
+						<path d="M14.83 14.83a4 4 0 1 1 0-5.66"></path>
+					</svg>
+					<!-- 动态手写签名 -->
+					<svg viewBox="0 0 180 50" class="absolute bottom-2 right-[-20px] w-36 h-12 opacity-30 text-gray-700 dark:text-gray-300">
+						<text x="15" y="38" font-family="'ComicSansWeb', cursive, sans-serif" font-size="36" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" class="signature-text">Ryanjxy</text>
+					</svg>
+				</div>
+
+				<style>
+					.signature-text {
+						/* 保持 800 确保长名字 Ryanjxy 完整显示 */
+						stroke-dasharray: 800;
+						stroke-dashoffset: 800;
+
+						/* 10秒为一个周期，无限循环 */
+						animation: auto-sign 10s ease-in-out infinite;
+					}
+					/* 自动循环签名动画的时间轴 */
+					@keyframes auto-sign {
+						0%   { stroke-dashoffset: 800; } /* 0秒：开始，完全隐藏 */
+						20%  { stroke-dashoffset: 0; }   /* 2秒：完全画出 */
+						60%  { stroke-dashoffset: 0; }   /* 2秒~6秒：保持显示 4 秒钟，供读者看清 */
+						80%  { stroke-dashoffset: 800; } /* 6秒~8秒：倒退擦除 */
+						100% { stroke-dashoffset: 800; } /* 8秒~10秒：保持空白隐藏状态 2 秒钟，然后开始下一次循环 */
+					}
+				</style>
+
+				<Waline />
+			</div>
+
+
+				<slot name="comment" />
+			</article>
+		</div>
+		<Footer />
+	</Container>
+
+	<!-- 悬浮返回按钮 -->
+	<button
+		id="back-button"
+		aria-label="返回上一页"
+		class="fixed left-8 md:left-12 bottom-8 md:bottom-12 w-12 h-12 rounded-full bg-zinc-400/20 backdrop-blur-md border border-white/40 flex items-center justify-center transition-all duration-200 hover:-translate-x-1 hover:bg-zinc-400/30 group z-50"
+	>
+		<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-gray-700 dark:text-gray-300 group-hover:-translate-x-0.5 transition-transform duration-200">
+			<path d="M19 12H5M12 19l-7-7 7-7"/>
+		</svg>
+	</button>
+
+	<script is:inline>
+		document.addEventListener('astro:page-load', () => {
+			const backBtn = document.getElementById('back-button');
+			if (backBtn) {
+				backBtn.addEventListener('click', (e) => {
+					e.preventDefault();
+					// 如果有历史记录且来源是本站，则后退；否则跳回搜索页
+					if (window.history.length > 1 && document.referrer.includes(window.location.host)) {
+						window.history.back();
+					} else {
+						window.location.href = '/search';
+					}
+				});
+			}
+		});
+	</script>
+
+<!-- 代码块增强样式 -->
+<style is:global>
+.code-block-wrapper {
+	position: relative;
+	margin-top: 1.5rem;
+	margin-bottom: 1.5rem;
+	border: 1px solid #e5e7eb;
+	border-radius: 0.375rem;
+	overflow: hidden;
+	background-color: #f9fafb;
+}
+
+.dark .code-block-wrapper {
+	border-color: #374151;
+	background-color: #1f2937;
+}
+
+.code-block-top-bar {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 0.5rem 1rem;
+	font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+	font-size: 0.75rem;
+	line-height: 1rem;
+	color: #6b7280;
+	background-color: #f3f4f6;
+	border-bottom: 1px solid #e5e7eb;
+}
+
+.dark .code-block-top-bar {
+	color: #9ca3af;
+	background-color: #374151;
+	border-bottom-color: #4b5563;
+}
+
+.code-block-language {
+	font-weight: 500;
+	text-transform: uppercase;
+	letter-spacing: 0.05em;
+}
+
+.code-block-copy-btn {
+	position: absolute;
+	top: 0.5rem;
+	right: 0.5rem;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 2rem;
+	height: 2rem;
+	padding: 0.25rem;
+	border-radius: 0.25rem;
+	background-color: #ffffff;
+	border: 1px solid #d1d5db;
+	color: #4b5563;
+	opacity: 0;
+	transition: opacity 0.2s ease, background-color 0.2s ease;
+	cursor: pointer;
+}
+
+.dark .code-block-copy-btn {
+	background-color: #4b5563;
+	border-color: #6b7280;
+	color: #d1d5db;
+}
+
+.code-block-wrapper:hover .code-block-copy-btn {
+	opacity: 1;
+}
+
+.code-block-copy-btn:hover {
+	background-color: #e5e7eb;
+}
+
+.dark .code-block-copy-btn:hover {
+	background-color: #6b7280;
+}
+
+.code-block-copy-btn svg {
+	width: 1rem;
+	height: 1rem;
+}
+
+.code-block-copy-btn.copied {
+	background-color: #10b981;
+	color: #ffffff;
+	border-color: #10b981;
+}
+
+.code-block-copy-btn.copied:hover {
+	background-color: #059669;
+}
+
+.code-block-wrapper pre {
+	margin: 0;
+	padding: 0.75rem 1rem 0.75rem 3.5em; /* 减小上下间距，左侧padding为行号预留空间 */
+	overflow-x: auto;
+	overflow-y: hidden !important; /* 彻底禁用垂直滚动 */
+	height: auto !important; /* 确保高度由内容决定 */
+	background-color: transparent !important;
+	border-radius: 0;
+	position: relative;
+	counter-reset: line;
+	white-space: pre;
+	/* Firefox 滚动条样式 */
+	scrollbar-width: thin;
+	scrollbar-color: rgba(110, 118, 129, 0.3) transparent;
+}
+
+.code-block-wrapper pre code {
+	background-color: transparent;
+}
+
+
+/* 暗黑模式滚动条样式 */
+.dark .code-block-wrapper pre {
+	/* Firefox 暗黑模式滚动条 */
+	scrollbar-color: rgba(255, 255, 255, 0.1) transparent;
+}
+
+
+/* 禁用代码换行，确保横向滚动 */
+.code-block-wrapper pre code {
+	white-space: pre;
+	display: block;
+	position: relative;
+}
+
+/* 行元素样式 */
+.code-block-wrapper pre code .line {
+	display: block;
+	position: relative;
+	counter-increment: line;
+	line-height: 0.5; /* 紧凑行间距 */
+	margin: 0;
+	padding: 0;
+}
+
+/* 行号伪元素 */
+.code-block-wrapper pre code .line::before {
+	content: counter(line);
+	position: absolute;
+	left: -3.5em;
+	top: 0;
+	width: 3.5em;
+	padding-right: 1em; /* 行号与代码的间距 */
+	text-align: right;
+	color: #9ca3af;
+	font-variant-numeric: tabular-nums;
+	user-select: none;
+	/* 移除垂直分割线 */
+	box-sizing: border-box;
+	line-height: inherit;
+}
+
+/* 暗黑模式行号样式 */
+.dark .code-block-wrapper pre code .line::before {
+	color: #6b7280;
+	/* 移除垂直分割线 */
+}
+
+/* 确保代码内容不折行 */
+.code-block-wrapper pre code,
+.code-block-wrapper pre code .line,
+.code-block-wrapper pre code .line > span {
+	white-space: pre !important;
+	word-wrap: normal !important;
+	word-break: normal !important;
+	overflow-wrap: normal !important;
+}
+
+/* 自定义滚动条样式 */
+.code-block-wrapper pre::-webkit-scrollbar {
+	height: 6px; /* 减小横向滚动条高度，使其更精致 */
+	width: 0;    /* 确认不显示垂直滚动条 */
+}
+
+/* 滚动条轨道（背景） */
+.code-block-wrapper pre::-webkit-scrollbar-track {
+	background: transparent;
+}
+
+/* 滚动条滑块（拖动块） */
+.code-block-wrapper pre::-webkit-scrollbar-thumb {
+	background-color: rgba(110, 118, 129, 0.3); /* 默认淡灰色 */
+	border-radius: 10px;
+}
+
+/* 夜晚模式下的滑块优化 */
+.dark .code-block-wrapper pre::-webkit-scrollbar-thumb {
+	background-color: rgba(255, 255, 255, 0.1); /* 更加透明，不突兀 */
+}
+
+/* 鼠标悬停时才加深颜色，平时尽量隐藏 */
+.code-block-wrapper pre:hover::-webkit-scrollbar-thumb {
+	background-color: rgba(110, 118, 129, 0.5);
+}
+
+/* Shiki 双主题变量映射 */
+html.dark .code-block-wrapper pre code,
+html.dark .code-block-wrapper pre code span,
+html.dark .astro-code,
+html.dark .astro-code span {
+	color: var(--shiki-dark) !important;
+	background-color: var(--shiki-dark-bg) !important;
+}
+
+</style>
+
+<!-- 代码块增强脚本 -->
+<script is:inline>
+(function() {
+	function enhanceCodeBlocks() {
+		// 找到所有 pre 标签，但排除已经被包装过的
+		document.querySelectorAll('pre:not(.code-block-enhanced)').forEach(pre => {
+			// 标记为已处理，避免重复处理
+			pre.classList.add('code-block-enhanced');
+
+			// 移除 Shiki 内联背景色
+			pre.style.backgroundColor = 'transparent';
+
+			// 获取语言
+			// 优先从 pre 的 data-language 属性中获取（Astro/Shiki 的标准方式）
+			let language = 'text';
+			const dataLanguage = pre.getAttribute('data-language');
+
+			if (dataLanguage && dataLanguage.trim() !== '') {
+				language = dataLanguage;
+			} else {
+				// 如果 data-language 不存在或为空，尝试从 code 元素的类名中获取
+				const code = pre.querySelector('code');
+				if (code) {
+					const classList = code.classList;
+					for (const cls of classList) {
+						if (cls.startsWith('language-')) {
+							language = cls.replace('language-', '');
+							break;
+						}
+					}
+				}
+			}
+
+			// 创建包装器
+			const wrapper = document.createElement('div');
+			wrapper.className = 'code-block-wrapper';
+
+			// 创建顶部栏
+			const topBar = document.createElement('div');
+			topBar.className = 'code-block-top-bar';
+
+			// 语言标签
+			const langSpan = document.createElement('span');
+			langSpan.className = 'code-block-language';
+			langSpan.textContent = language;
+
+			// 复制按钮
+			const copyBtn = document.createElement('button');
+			copyBtn.className = 'code-block-copy-btn';
+			copyBtn.setAttribute('type', 'button');
+			copyBtn.setAttribute('aria-label', '复制代码');
+			copyBtn.innerHTML = `
+				<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+					<path stroke-linecap="round" stroke-linejoin="round" d="M15.666 3.888A2.25 2.25 0 0013.5 2.25h-3c-1.03 0-1.9.693-2.166 1.638m7.332 0c.055.194.084.4.084.612v0a.75.75 0 01-.75.75H9a.75.75 0 01-.75-.75v0c0-.212.03-.418.084-.612m7.332 0c.646.049 1.288.11 1.927.184 1.1.128 1.907 1.077 1.907 2.185V19.5a2.25 2.25 0 01-2.25 2.25H6.75A2.25 2.25 0 014.5 19.5V6.257c0-1.108.806-2.057 1.907-2.185a48.208 48.208 0 011.927-.184" />
+				</svg>
+			`;
+
+			// 复制成功图标
+			const checkIcon = `
+				<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+					<path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+				</svg>
+			`;
+
+			// 复制逻辑
+			copyBtn.addEventListener('click', async () => {
+				const text = pre.innerText;
+				try {
+					await navigator.clipboard.writeText(text);
+					const originalHTML = copyBtn.innerHTML;
+					copyBtn.innerHTML = checkIcon;
+					copyBtn.classList.add('copied');
+					setTimeout(() => {
+						copyBtn.innerHTML = originalHTML;
+						copyBtn.classList.remove('copied');
+					}, 2000);
+				} catch (err) {
+					console.error('复制失败:', err);
+				}
+			});
+
+			topBar.appendChild(langSpan);
+			wrapper.appendChild(topBar);
+			wrapper.appendChild(pre.cloneNode(true));
+			pre.parentNode.replaceChild(wrapper, pre);
+
+			// 将复制按钮添加到包装器（绝对定位）
+			wrapper.appendChild(copyBtn);
+		});
+	}
+
+	// 在 Astro 页面加载后执行
+	if (document.readyState === 'loading') {
+		document.addEventListener('DOMContentLoaded', enhanceCodeBlocks);
+	} else {
+		enhanceCodeBlocks();
+	}
+
+	// 监听 View Transitions 事件
+	document.addEventListener('astro:page-load', enhanceCodeBlocks);
+})();
+</script>
+
+</BaseLayout>
