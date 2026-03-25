@@ -1,5 +1,5 @@
 ---
-title: '免费简单的图床搭建教程'
+title: '免费简单的图床搭建教程(博客样例2)'
 description: ""
 pubDate: '2026-02-16'    
 heroImage: "https://raw.githubusercontent.com/Ryanjxy123/picbed/main/data139489775_p0_master1200.jpg"

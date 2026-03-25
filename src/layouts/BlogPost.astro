@@ -10,6 +10,7 @@ import MarkdownBody from "../components/MarkdownBody.astro";
 import TagBadge from "../components/TagBadge.astro";
 import TableOfContents from "../components/TableOfContents.astro";
 import Waline from "../components/Waline.astro";
+import AIChat from "../components/AIChat.tsx";
 
 import { getReadingTime } from "../utils/readingTime";
 
@@ -21,6 +22,7 @@ type Props = CollectionEntry<"blog">["data"] & {
 const { title, description, pubDate, updatedDate, heroImage, heroImageSource, body, headings } = Astro.props;
 const readingTime = getReadingTime(body);
 const formattedDate = pubDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+const articleContent = body || title || "博客文章";
 ---
 
 <BaseLayout>
@@ -587,4 +589,5 @@ html.dark .astro-code span {
 })();
 </script>
 
+	<AIChat slot="bot" client:only="react" articleContent={articleContent} />
 </BaseLayout>

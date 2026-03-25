@@ -1,5 +1,5 @@
 ---
-title: 'AI-Assisted Research Workflow'
+title: 'AI-Assisted Research Workflow(博客样例3)'
 description: ""
 pubDate: '2026-03-09'    
 heroImage: "https://raw.githubusercontent.com/Ryanjxy123/picbed/main/data20260309090850726.png"

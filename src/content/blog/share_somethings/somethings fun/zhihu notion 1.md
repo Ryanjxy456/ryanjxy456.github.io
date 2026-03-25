@@ -1,5 +1,5 @@
 ---
-title: '知乎优质文章小记-1'
+title: '知乎优质文章小记-1(博客样例1)'
 description: ""
 pubDate: '2026-02-15'    
 heroImage: "https://raw.githubusercontent.com/Ryanjxy123/picbed/main/data130990804_p0_master1200.jpg"

@@ -36,7 +36,10 @@ export default defineConfig({
     syntaxHighlight: 'shiki',
   },
   vite: {
-    plugins: [tailwindcss()]
+    plugins: [tailwindcss()],
+    optimizeDeps: {
+      exclude: ['zod', '@ai-sdk/react']
+    }
   },
   devToolbar: {
     enabled: false

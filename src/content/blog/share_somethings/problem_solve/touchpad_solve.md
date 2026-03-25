@@ -1,5 +1,5 @@
 ---
-title: '笔记本触控板失灵修复指南'
+title: '笔记本触控板失灵修复指南(博客样例4)'
 description: ""
 pubDate: '2026-03-19'    
 heroImage: "https://raw.githubusercontent.com/Ryanjxy123/picbed/main/data20260319102153999.png"
