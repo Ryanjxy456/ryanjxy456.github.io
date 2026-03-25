@@ -14,7 +14,7 @@ export default defineConfig({
   site: 'https://ryanjxy456.github.io',
   base: '/',
   // 修改点 1：将 static 改为 hybrid，支持 API 动态运行
-  output: 'hybrid', 
+  output: 'static', 
   // 修改点 2：添加 vercel 适配器
   adapter: vercel({
     webAnalytics: { enabled: true }
