@@ -7,22 +7,27 @@ import react from '@astrojs/react';
 import tailwindcss from "@tailwindcss/vite";
 import remarkMath from 'remark-math';
 import rehypeKatex from 'rehype-katex';
+import vercel from '@astrojs/vercel'; // 确认已引入
 
 // https://astro.build/config
 export default defineConfig({
   site: 'https://ryanjxy456.github.io',
   base: '/',
-  output: 'static',
+  // 修改点 1：将 static 改为 hybrid，支持 API 动态运行
+  output: 'hybrid', 
+  // 修改点 2：添加 vercel 适配器
+  adapter: vercel({
+    webAnalytics: { enabled: true }
+  }),
+  
   integrations: [mdx(), sitemap(), svelte(), react()],
   
   markdown: {
-    // 正确的做法：插件只在最外层声明一次
     remarkPlugins: [remarkMath],
     rehypePlugins: [rehypeKatex, rehypeSlug],
     remarkRehype: {
       footnoteLabel: "脚注",
       footnoteBackLabel: '文档内容的脚注',
-      // 这里只放 remark-rehype 的配置项，绝不能放函数插件！
       allowDangerousHtml: true,
     },
     shikiConfig: {
