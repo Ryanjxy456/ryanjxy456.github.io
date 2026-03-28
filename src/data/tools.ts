@@ -80,51 +80,43 @@ export const toolCategories: ToolCategory[] = [
         category: "ai"
       },
       {
-        id: "chatgpt",
-        name: "ChatGPT",
-        description: "OpenAI 强大的自然语言对话模型",
-        url: "https://chatgpt.com/",
-        icon: "https://api.iconify.design/logos:openai-icon.svg",
+        id: "yuanbao",
+        name: "腾讯元宝",
+        description: "腾讯推出的基于混元大模型的 AI 助手",
+        url: "https://yuanbao.tencent.com/",
+        icon: "https://yuanbao.tencent.com/favicon.ico",
         category: "ai"
       },
       {
-        id: "gemini",
-        name: "Gemini",
-        description: "Google 推出的多模态原生人工智能助手",
-        url: "https://gemini.google.com/",
-        icon: "https://raw.githubusercontent.com/Ryanjxy123/picbed/main/datagemini-color.png",
+        id: "yiyan",
+        name: "文心一言",
+        description: "百度推出的基于文心大模型的知识增强语言模型",
+        url: "https://yiyan.baidu.com/",
+        icon: "https://raw.githubusercontent.com/Ryanjxy123/picbed/main/datawenxin-color.svg",
         category: "ai"
       },
       {
-        id: "aistudio",
-        name: "AI Studio",
-        description: "Google 提供的大模型原型开发与 API 工作台",
-        url: "https://aistudio.google.com/",
-        icon: "https://raw.githubusercontent.com/Ryanjxy123/picbed/main/dataaistudio.svg",
+        id: "jimeng",
+        name: "即梦",
+        description: "字节跳动推出的 AI 图像与视频创作平台",
+        url: "https://jimeng.jianying.com/",
+        icon: "https://raw.githubusercontent.com/Ryanjxy123/picbed/main/datajimeng-color.svg",
         category: "ai"
       },
       {
-        id: "claude",
-        name: "Claude",
-        description: "Anthropic 开发的安全高效的 AI 助手",
-        url: "https://claude.ai/",
-        icon: "https://raw.githubusercontent.com/Ryanjxy123/picbed/main/dataclaude-color.png",
+        id: "kimi",
+        name: "Kimi",
+        description: "月之暗面推出的支持超长上下文的智能助手",
+        url: "https://kimi.moonshot.cn/",
+        icon: "https://kimi.moonshot.cn/favicon.ico",
         category: "ai"
       },
       {
-        id: "notebooklm",
-        name: "NotebookLM",
-        description: "Google 推出的 AI 驱动个性化笔记与研究助手",
-        url: "https://notebooklm.google.com/",
-        icon: "https://raw.githubusercontent.com/Ryanjxy123/picbed/main/datanotebooklm.svg",
-        category: "ai"
-      },
-      {
-        id: "grok",
-        name: "Grok",
-        description: "xAI 打造的拥有实时知识访问能力的 AI",
-        url: "https://grok.com/",
-        icon: "https://raw.githubusercontent.com/Ryanjxy123/picbed/main/datagrok.png",
+        id: "zhipu",
+        name: "智谱 AI",
+        description: "智谱 AI 推出的基于 GLM 系列模型的智能对话助手",
+        url: "https://chatglm.cn/",
+        icon: "https://chatglm.cn/favicon.ico",
         category: "ai"
       }
     ]
