@@ -32,9 +32,9 @@ html.dark {
 }
 
 /* === 模块3：视觉风格重塑 === */
-/* 暗色模式强制背景色 - 接近纯黑（仅 html，作为兜底色） */
+/* 暗色模式强制背景色 - 深蓝黑色调 */
 html.dark {
-    background-color: #050505;
+    background-color: #0f172a;
 }
 
 /* 关键：body 必须透明，否则会盖住 Header 的背景图 */

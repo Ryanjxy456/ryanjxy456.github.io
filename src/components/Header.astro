@@ -50,7 +50,7 @@ const heightClassName = largeBanner ? "h-[calc(100svh+8rem)]" : "h-[calc(65lvh+8
 </header>
 
 <!-- 背景图层：使用物理堆叠 + CSS 透明度切换 -->
-<div class="absolute top-0 left-0 w-full h-full overflow-hidden -z-50 pointer-events-none">
+<div class="absolute top-0 left-0 w-full h-full overflow-hidden -z-50 pointer-events-none" style="mask-image: linear-gradient(to bottom, black 70%, transparent 100%); -webkit-mask-image: linear-gradient(to bottom, black 70%, transparent 100%);">
 	<!-- 白天背景图：亮色模式可见，暗色模式透明 -->
 	<img
 		src="/header_day.webp"
@@ -64,5 +64,5 @@ const heightClassName = largeBanner ? "h-[calc(100svh+8rem)]" : "h-[calc(65lvh+8
 		class="absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ease-in-out opacity-0 dark:opacity-100"
 	/>
 	<!-- 底部渐变遮罩 -->
-	<div class="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-white dark:to-[#050505]"></div>
+	<div class="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-white dark:to-[#0f172a]"></div>
 </div>
