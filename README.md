@@ -1,29 +1,43 @@
-# Astro Koi Blog Template
+# AI伴读博客
 
-Koi (こい, 恋) 是由 [tcdw](https://www.tcdw.net) 为他不存在的女儿制作的 [Astro](https://astro.build/) 静态博客模板。
+一个基于 Astro 框架构建的现代化个人博客系统，集成了 AI 辅助阅读与沉浸式音乐播放体验。
 
-![博客截图](./.github/assets/Astro%20Koi.jpeg)
+## 🌟 项目特色
 
-## 特性
+- **🤖 AI 辅助伴读**：内置智能 AI 对话助手，支持文章内容总结、难点解析，为您提供全天候的阅读陪伴。
+- **🎵 沉浸式音乐播放**：集成精致的音乐播放组件，在阅读文字的同时享受律动，打造静谧的阅读环境。
+- **🚀 极速加载**：基于 Astro 5.0 的孤岛架构（Islands Architecture），最小化客户端 JavaScript 运行时。
+- **🌈 多框架集成**：灵活运用 React 与 Svelte 组件，兼顾功能性与开发效率。
+- **🎨 优雅视觉设计**：采用 Tailwind CSS 4.0 构建，支持响应式布局，内置精心挑选的字体库（如 ChillRoundF）。
+- **📑 丰富内容支持**：完整支持 MDX、数学公式（KaTeX）、目录自动生成及全文搜索。
 
-- 全站响应式，支持各种设备的浏览需求
-- 明亮/暗黑双主题，跟随用户操作系统设置应用
-- SEO 友好
-- 性能好：前端部分仅需少量 JavaScript
-- 可访问性好：样式设计基本符合 WCAG 规范[^1]，键盘/读屏软件友好
-- 好康！！！
+## 🛠️ 技术栈
 
-[^1]: 需要搭配恰当的横幅图片，才能使得头部的标题和副标题文字对比度符合 WCAG 颜色标准。
+- **框架**: [Astro](https://astro.build/) (v5.0+)
+- **组件**: [React](https://react.dev/) (v19) & [Svelte](https://svelte.dev/) (v5)
+- **样式**: [Tailwind CSS](https://tailwindcss.com/) (v4)
+- **动画**: [Framer Motion](https://www.framer.com/motion/)
+- **评论**: [Waline](https://waline.js.org/)
+- **部署**: [Vercel](https://vercel.com/)
 
-## 技术栈
+## 🚀 快速开始
 
-- [Astro](https://astro.build/) - 通用的内容性网站框架
-- [Tailwind CSS](https://tailwindcss.com/) - 原子化的 CSS 框架
-- [Svelte](https://svelte.dev/) - 为网站增加互动元素的轻量级 UI 库
-- [TypeScript](https://www.typescriptlang.org/) - <abbr title="从佐玩官网看到的一句话描述。我觉得这个很妙，抄过来了（">八块腹肌</abbr>的 JavaScript
+该项目推荐使用 `pnpm` 进行包管理：
 
-## 许可证
+```bash
+# 安装依赖
+pnpm install
 
-本模板遵循 MIT 许可证发布。
+# 启动开发服务器
+pnpm dev
 
-同时，希望能够保留页面底部的 Based on Koi 字样，谢谢w
+# 构建生产版本
+pnpm build
+
+# 预览构建结果
+pnpm preview
+```
+
+## 📄 许可
+
+本项目基于 [MIT](LICENSE) 协议开源。
