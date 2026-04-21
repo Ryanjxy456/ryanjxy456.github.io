@@ -5,86 +5,91 @@
 </div>
 
 <script is:inline>
-	document.addEventListener('astro:page-load', () => {
-		const playerWrap = document.getElementById('global-music-player');
-		if (!playerWrap) return;
+	{
+		const initPlayer = () => {
+			const playerWrap = document.getElementById('global-music-player');
+			if (!playerWrap) return;
 
-		// 1. 形态切换：吸附主页占位符 vs 右下角悬浮
-		const updatePosition = () => {
-			const placeholder = document.getElementById('player-placeholder');
-			if (placeholder) {
-				const rect = placeholder.getBoundingClientRect();
-				playerWrap.style.position = 'absolute';
-				playerWrap.style.top = (rect.top + window.scrollY) + 'px';
-				playerWrap.style.left = (rect.left + window.scrollX) + 'px';
-				playerWrap.style.width = rect.width + 'px';
-				playerWrap.style.height = rect.height + 'px';
-				playerWrap.classList.remove('is-floating');
-				playerWrap.classList.add('is-embedded');
+			// 1. 形态切换逻辑
+			const updatePosition = () => {
+				const placeholder = document.getElementById('player-placeholder');
+				if (placeholder) {
+					const rect = placeholder.getBoundingClientRect();
+					playerWrap.style.position = 'absolute';
+					playerWrap.style.top = (rect.top + window.scrollY) + 'px';
+					playerWrap.style.left = (rect.left + window.scrollX) + 'px';
+					playerWrap.style.width = rect.width + 'px';
+					playerWrap.style.height = rect.height + 'px';
+					playerWrap.classList.remove('is-floating');
+					playerWrap.classList.add('is-embedded');
+				} else {
+					playerWrap.style.position = 'fixed';
+					playerWrap.style.top = '';
+					playerWrap.style.left = '';
+					playerWrap.style.width = '';
+					playerWrap.style.height = '';
+					playerWrap.classList.remove('is-embedded');
+					playerWrap.classList.add('is-floating');
+				}
+			};
+
+			// 清理并重新绑定事件，防止堆积
+			window.removeEventListener('resize', updatePosition);
+			window.removeEventListener('scroll', updatePosition);
+			window.addEventListener('resize', updatePosition);
+			window.addEventListener('scroll', updatePosition);
+			updatePosition();
+
+			// 2. 初始化或恢复播放
+			if (!window.ap) {
+				// 使用更稳定的 API 地址，并增加错误捕获
+				fetch('https://api.injahow.cn/meting/?server=netease&type=playlist&id=17822229873')
+					.then(res => {
+						if (!res.ok) throw new Error('Network response was not ok');
+						return res.json();
+					})
+					.then(data => {
+						window.ap = new APlayer({
+							container: document.getElementById('aplayer-mount'),
+							audio: data, 
+							order: 'list', 
+							loop: 'all', 
+							theme: '#3b82f6', 
+							listFolded: true,
+							lrcType: 3
+						});
+						
+						window.ap.on('play', () => { window.ap_was_playing = true; });
+						window.ap.on('pause', () => { window.ap_was_playing = false; });
+						
+						initCustomUI(playerWrap);
+					})
+					.catch(err => {
+						console.warn('MusicPlayer: Failed to load playlist', err);
+						const mount = document.getElementById('aplayer-mount');
+						if (mount) mount.innerHTML = '<div style="padding:10px;font-size:12px;opacity:0.5">Playlist unavailable</div>';
+					});
 			} else {
-				// 非主页模式
-				playerWrap.style.position = 'fixed';
-				playerWrap.style.top = '';
-				playerWrap.style.left = '';
-				playerWrap.style.width = '';
-				playerWrap.style.height = '';
-				playerWrap.classList.remove('is-embedded');
-				playerWrap.classList.add('is-floating');
+				if (window.ap_was_playing && window.ap.paused) {
+					window.ap.play().catch(() => {}); // 捕获浏览器自动播放限制报错
+				}
+				initCustomUI(playerWrap);
 			}
 		};
 
-		updatePosition();
-		window.addEventListener('resize', updatePosition);
-		window.addEventListener('scroll', updatePosition);
-
-		// 2. 原生初始化与无缝续播
-		if (!window.ap) {
-			fetch('https://api.i-meto.com/meting/api?server=netease&type=playlist&id=17822229873')
-				.then(res => res.json())
-				.then(data => {
-					window.ap = new APlayer({
-						container: document.getElementById('aplayer-mount'),
-						audio: data, 
-						order: 'list', 
-						loop: 'all', 
-						theme: '#3b82f6', 
-						listFolded: true,
-						lrcType: 3
-					});
-					
-					// 监听播放状态以备续播
-					window.ap.on('play', () => { window.ap_was_playing = true; });
-					window.ap.on('pause', () => { window.ap_was_playing = false; });
-					
-					initCustomUI();
-				});
-		} else {
-			// 如果已经初始化，尝试恢复播放状态
-			if (window.ap_was_playing) {
-				setTimeout(() => { 
-					if (window.ap.paused) window.ap.play(); 
-				}, 100);
-			}
-			initCustomUI();
-		}
-
-		// 3. 注入交互与渐变歌词 (防止重复执行)
-		function initCustomUI() {
-			if (playerWrap.dataset.ui_inited === "true") return;
-			playerWrap.dataset.ui_inited = "true";
-			
+		// 3. 注入交互逻辑 (保持幂等性)
+		function initCustomUI(playerWrap) {
 			const ap = window.ap;
+			if (!ap || playerWrap.dataset.ui_inited === "true") return;
 			
 			const checkControl = setInterval(() => {
 				const timeBar = document.querySelector('.aplayer-time');
 				if (!timeBar) return;
 				clearInterval(checkControl);
-
+				
+				playerWrap.dataset.ui_inited = "true";
 				ap.setMode('normal');
 				
-				// --- 注入完美的控制按键组 (上一首、播放/暂停、下一首) ---
-				// 清理可能存在的旧自定义按钮防重复
-				document.querySelectorAll('.custom-control-btn').forEach(btn => btn.remove());
 				const btnStyle = 'cursor: pointer; font-size: 15px; opacity: 0.7; transition: opacity 0.2s; display: flex; align-items: center; justify-content: center;';
 
 				const prevBtn = document.createElement('span');
@@ -94,12 +99,11 @@
 				prevBtn.onclick = (e) => { e.stopPropagation(); ap.skipBack(); ap.play(); };
 
 				const playBtn = document.createElement('span');
-				// 初始状态判断
-				playBtn.innerHTML = ap.audio.paused ? '▶' : '⏸';
+				playBtn.innerHTML = ap.paused ? '▶' : '⏸';
 				playBtn.className = 'custom-control-btn aplayer-icon';
 				playBtn.style.cssText = btnStyle + 'font-size: 17px; margin: 0 8px;';
 				playBtn.onclick = (e) => { e.stopPropagation(); ap.toggle(); };
-				// 监听 APlayer 原生事件，实时同步图标状态
+				
 				ap.on('play', () => playBtn.innerHTML = '⏸');
 				ap.on('pause', () => playBtn.innerHTML = '▶');
 
@@ -109,7 +113,6 @@
 				nextBtn.style.cssText = btnStyle;
 				nextBtn.onclick = (e) => { e.stopPropagation(); ap.skipForward(); ap.play(); };
 
-				// 按顺序插入到时间文本前面: Prev -> Play -> Next
 				timeBar.insertBefore(nextBtn, timeBar.firstChild);
 				timeBar.insertBefore(playBtn, nextBtn);
 				timeBar.insertBefore(prevBtn, playBtn);
@@ -122,21 +125,20 @@
 				if (infoArea && musicArea) infoArea.insertBefore(lrcDisplay, musicArea.nextSibling);
 
 				const syncLrc = () => {
-					if (!ap || !lrcDisplay) return requestAnimationFrame(syncLrc);
+					if (!window.ap || !lrcDisplay) return;
 					const currentLrc = document.querySelector('.aplayer-lrc-current');
 					if (currentLrc) {
-						const text = currentLrc.textContent.replace(/\[\d+:\d+.\d+\]/g, '').trim();
+						const text = currentLrc.textContent.trim();
 						if (text && lrcDisplay.textContent !== text) lrcDisplay.textContent = text;
-						else if (!text && lrcDisplay.textContent !== '...') lrcDisplay.textContent = '...';
-					} else if (!ap.paused && lrcDisplay.textContent !== 'Enjoy Music...') {
-						lrcDisplay.textContent = 'Enjoy Music...';
 					}
 					requestAnimationFrame(syncLrc);
 				};
 				requestAnimationFrame(syncLrc);
 			}, 100);
 		}
-	});
+
+		document.addEventListener('astro:page-load', initPlayer);
+	}
 </script>
 
 <style is:global>

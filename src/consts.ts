@@ -26,11 +26,11 @@ export const SITE_COPYRIGHT_YEAR_START = "2025";
 
 // 网站头部导航菜单
 export const SITE_MENU: { title: string, href: string, target: string }[] = [
-    { title: "博客", href: "./blog/", target: "" },
-    { title: "归档", href: "./page/archive/", target: "" },
-    { title: "工具", href: "./tools/", target: "" },
-    { title: "链接", href: "./page/links/", target: "" },
-    { title: "关于", href: "/about", target: "" }
+    { title: "博客", href: "/blog/", target: "" },
+    { title: "归档", href: "/page/archive/", target: "" },
+    { title: "工具", href: "/tools/", target: "" },
+    { title: "链接", href: "/page/links/", target: "" },
+    { title: "关于", href: "/about/", target: "" }
     // { title: "外部链接", href: "https://www.example.com", target: "_blank" }
 ]
 

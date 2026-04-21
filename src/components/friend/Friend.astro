@@ -21,11 +21,12 @@ const { tagName: LinkWrapper = "li", url, avatarUrl, name, description } = Astro
             {
                 avatarUrl ? (
                     typeof avatarUrl === 'string' ? (
-                        <Image
+                        <img
                             src={avatarUrl}
                             alt={name + " 的头像"}
                             class="block size-16 bg-white/20 dark:bg-zinc-800 object-cover rounded-full"
-                            inferSize={true}
+                            loading="lazy"
+                            decoding="async"
                         />
                     ) : (
                         <Image
