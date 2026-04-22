@@ -148,14 +148,6 @@ export const toolCategories: ToolCategory[] = [
         url: "https://docs.conda.io/en/latest/miniconda.html",
         icon: "https://api.iconify.design/devicon:anaconda.svg",
         category: "dev-env"
-      },
-      {
-        id: "cc-switching",
-        name: "CC-Switching",
-        description: "Claude Code 终端环境与账号切换脚本",
-        url: "https://github.com/farion1231/cc-switch/blob/main/README_ZH.md", // 请在后续替换为你的实际项目或文章链接
-        icon: "https://raw.githubusercontent.com/Ryanjxy123/picbed/main/data20260301155844513.png",
-        category: "dev-env"
       }
     ]
   },
